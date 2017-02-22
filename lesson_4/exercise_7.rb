@@ -1,14 +1,12 @@
 statement = "The Flintstones Rock"
 
-statement_array = statement.downcase.chars.sort
+letters = ('a'..'z').to_a
 
-arr = []
+hash = {}
 
-statement_array.each do |letter|
-   if arr.empty?
-    arr << letter
-    next
-   else  
+letters.each do |letter|
+  frequency = statement.scan(letter).count
+  hash[letter] = frequency if frequency > 0
+end
 
-
-p statement_array
+p hash
