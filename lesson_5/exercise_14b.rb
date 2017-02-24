@@ -8,17 +8,15 @@ hsh = {
 
 arr = []
 color_arr = []
+array = []
 
+hsh.each do |key, value|
+  value[:colors].select do |color_val|
+  if value.has_value?("fruit") then
 
-hsh.select do |key, value|
-    if value[:type] == 'fruit' then
-      value[:colors].map do |color_val|
-        color_arr << color_val.capitalize
-      end
-      arr << color_arr
-      next
-    else arr << value[:size]
+  array << color_val.capitalize
+end
     end
-  end
-
+end
+p array
 p arr
