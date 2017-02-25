@@ -9,5 +9,4 @@ arr.select do |hsh|
  end
 end
 end
-print
 
