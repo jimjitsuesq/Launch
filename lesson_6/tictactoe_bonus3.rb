@@ -1,4 +1,3 @@
-require 'pry'
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
@@ -59,19 +58,9 @@ def player_places_piece!(brd)
   brd[square] = PLAYER_MARKER
 end
 
-def find_computer_opportunities(line, board)
-  if board.values_at(*line).count('O') == 2
-    board.select{|k,v| line.include?(k) && v == ' '}.keys.first
-  else
-    nil
-  end
-end
-
 def computer_places_piece!(brd)
-
   square = ''
   WINNING_LINES.each do |line|
-    
     if brd[line[0]] == PLAYER_MARKER && brd[line[1]] == PLAYER_MARKER && brd[line[2]] == INITIAL_MARKER
       square = line[2]
       break
@@ -94,17 +83,9 @@ def computer_places_piece!(brd)
     #  square = line[1]
     #  break
 
-    else
-     
-      square = find_computer_opportunities(line, brd)
-      break if square
-      end
-
-      if !square
-        square = empty_squares(brd).sample
-      end
+    else square = empty_squares(brd).sample
     end
-  
+  end
   brd[square] = COMPUTER_MARKER
 end
 
