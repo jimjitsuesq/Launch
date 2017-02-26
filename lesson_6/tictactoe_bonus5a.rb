@@ -1,3 +1,4 @@
+require 'pry'
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
@@ -61,13 +62,18 @@ end
 def find_computer_opportunities(line, board)
   if board.values_at(*line).count('O') == 2
     board.select { |k, v| line.include?(k) && v == ' ' }.keys.first
+    binding.pry
   end
 end
 
 def computer_places_piece!(brd)
   square = ''
+  board = []
   WINNING_LINES.each do |line|
-    if brd[line[0]] == PLAYER_MARKER && brd[line[1]] == PLAYER_MARKER && brd[line[2]] == INITIAL_MARKER
+    find_computer_opportunities(line, board)
+    if square == ''
+      break
+    elsif brd[line[0]] == PLAYER_MARKER && brd[line[1]] == PLAYER_MARKER && brd[line[2]] == INITIAL_MARKER
       square = line[2]
       break
     elsif brd[line[1]] == PLAYER_MARKER && brd[line[2]] == PLAYER_MARKER && brd[line[0]] == INITIAL_MARKER
@@ -88,12 +94,7 @@ def computer_places_piece!(brd)
     # when brd[line[0]] == PLAYER_MARKER && brd[line[2]] == PLAYER_MARKER && brd[line[1]] == INITIAL_MARKER
     #  square = line[1]
     #  break
-
     else
-      square = find_computer_opportunities(line, brd)
-      break if square
-    end
-    if !square
       square = empty_squares(brd).sample
     end
   end
