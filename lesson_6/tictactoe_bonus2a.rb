@@ -53,15 +53,21 @@ def computer_places_piece!(brd)
   #WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 8], [3, 6, 9], [1, 5, 9], [3, 5, 7]]
   #THREATS = [[1, 2], [2, 3], [4, 5], [5, 6], [7, 8], [8, 9], [1, 4], [4, 7], [2, 5], [5, 8], [3, 6], [6,9], [1, 5], [5, 9], [3, 5], [5, 7]]
   square = ''
-  WINNING_LINES.each do |arr|
+  WINNING_LINES.each do |line|
     case square
-    when arr[0] == PLAYER_MARKER && arr[1] == PLAYER_MARKER && brd[arr[2]] == INITIAL_MARKER
-      square = arr[2]
-    when arr[1] == PLAYER_MARKER && arr[2] == PLAYER_MARKER && brd[arr[0]] == INITIAL_MARKER
-      square = arr[0]
+    when brd[line[0]] == PLAYER_MARKER && brd[line[1]] == PLAYER_MARKER && brd[line[2]] == INITIAL_MARKER
+      square = line[2]
+      next
+    when brd[line[1]] == PLAYER_MARKER && brd[line[2]] == PLAYER_MARKER && brd[line[0]] == INITIAL_MARKER
+      square = line[0]
+      next
+    when brd[line[0]] == PLAYER_MARKER && brd[line[2]] == PLAYER_MARKER && brd[line[1]] == INITIAL_MARKER
+      square = line[1]
+      next
     else
       square = empty_squares(brd).sample
     end
+    binding.pry
   end
   brd[square] = COMPUTER_MARKER
 end
