@@ -1,13 +1,12 @@
-require 'pry'
-
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
 WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 8], [3, 6, 9], [1, 5, 9], [3, 5, 7]]
-THREATS = [[1, 2], [2, 3], [4, 5], [5, 6], [7, 8], [8, 9], [1, 4], [4, 7], [2, 5], [5, 8], [3, 6], [6,9], [1, 5], [5, 9], [3, 5], [5, 7]]
 
-def prompt(msg)
-  puts "=> #{msg}"
+def initialize_board
+  new_board = {}
+  (1..9).each { |num| new_board[num] = INITIAL_MARKER }
+  new_board
 end
 
 def display_board(brd)
@@ -32,10 +31,20 @@ def empty_squares(brd)
   brd.keys.select { |num| brd[num] == INITIAL_MARKER }
 end
 
-def initialize_board
-  new_board = {}
-  (1..9).each { |num| new_board[num] = INITIAL_MARKER }
-  new_board
+def joinor(arr, delim=", ", word="or")
+  if arr.count == 2
+    puts "1 or 2"
+  elsif arr.count == 1
+    puts arr.to_s
+  else
+    arr_last = arr.pop
+    arr.push(word)
+    puts "#{arr.join(delim)} #{arr_last}"
+  end
+end
+
+def prompt(msg)
+  puts "=> #{msg}"
 end
 
 def player_places_piece!(brd)
@@ -50,17 +59,31 @@ def player_places_piece!(brd)
 end
 
 def computer_places_piece!(brd)
-  #WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 8], [3, 6, 9], [1, 5, 9], [3, 5, 7]]
-  #THREATS = [[1, 2], [2, 3], [4, 5], [5, 6], [7, 8], [8, 9], [1, 4], [4, 7], [2, 5], [5, 8], [3, 6], [6,9], [1, 5], [5, 9], [3, 5], [5, 7]]
   square = ''
-  WINNING_LINES.each do |arr|
-    case square
-    when arr[0] == PLAYER_MARKER && arr[1] == PLAYER_MARKER && brd[arr[2]] == INITIAL_MARKER
-      square = arr[2]
-    when arr[1] == PLAYER_MARKER && arr[2] == PLAYER_MARKER && brd[arr[0]] == INITIAL_MARKER
-      square = arr[0]
-    else
-      square = empty_squares(brd).sample
+  WINNING_LINES.each do |line|
+    if brd[line[0]] == PLAYER_MARKER && brd[line[1]] == PLAYER_MARKER && brd[line[2]] == INITIAL_MARKER
+      square = line[2]
+      break
+    elsif brd[line[1]] == PLAYER_MARKER && brd[line[2]] == PLAYER_MARKER && brd[line[0]] == INITIAL_MARKER
+      square = line[0]
+      break
+    elsif brd[line[0]] == PLAYER_MARKER && brd[line[2]] == PLAYER_MARKER && brd[line[1]] == INITIAL_MARKER
+      square = line[1]
+      break
+    
+    # COULD NOT GET THIS CASE STATEMENT TO WORK.  ALWAYS GOES TO 'ELSE'
+    # case square
+    # when brd[line[0]] == PLAYER_MARKER && brd[line[1]] == PLAYER_MARKER && brd[line[2]] == INITIAL_MARKER
+    #  square = line[2]
+    #  break
+    # when brd[line[1]] == PLAYER_MARKER && brd[line[2]] == PLAYER_MARKER && brd[line[0]] == INITIAL_MARKER
+    #  square = line[0]
+    #  break
+    # when brd[line[0]] == PLAYER_MARKER && brd[line[2]] == PLAYER_MARKER && brd[line[1]] == INITIAL_MARKER
+    #  square = line[1]
+    #  break
+
+    else square = empty_squares(brd).sample
     end
   end
   brd[square] = COMPUTER_MARKER
@@ -87,18 +110,6 @@ def detect_winner(brd)
     end
   end
   nil
-end
-
-def joinor(arr, delim=", ", word="or")
-  if arr.count == 2
-    puts "1 or 2"
-  elsif arr.count == 1
-    puts arr.to_s
-  else
-    arr_last = arr.pop
-    arr.push(word)
-    puts "#{arr.join(delim)} #{arr_last}"
-  end
 end
 
 computer_count = 0
