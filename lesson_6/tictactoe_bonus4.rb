@@ -1,3 +1,4 @@
+# Given solution implemented for find_at_risk_square
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
@@ -58,6 +59,12 @@ def player_places_piece!(brd)
   brd[square] = PLAYER_MARKER
 end
 
+def find_at_risk_square(line, board)
+  if board.values_at(*line).count('X') == 2
+    board.select { |k, v| line.include?(k) && v == ' ' }.keys.first
+  end
+end
+
 def find_computer_opportunities(line, board)
   if board.values_at(*line).count('O') == 2
     board.select { |k, v| line.include?(k) && v == ' ' }.keys.first
@@ -65,37 +72,19 @@ def find_computer_opportunities(line, board)
 end
 
 def computer_places_piece!(brd)
-  square = ''
+  square = nil
   WINNING_LINES.each do |line|
-    if brd[line[0]] == PLAYER_MARKER && brd[line[1]] == PLAYER_MARKER && brd[line[2]] == INITIAL_MARKER
-      square = line[2]
-      break
-    elsif brd[line[1]] == PLAYER_MARKER && brd[line[2]] == PLAYER_MARKER && brd[line[0]] == INITIAL_MARKER
-      square = line[0]
-      break
-    elsif brd[line[0]] == PLAYER_MARKER && brd[line[2]] == PLAYER_MARKER && brd[line[1]] == INITIAL_MARKER
-      square = line[1]
-      break
-    
-    # COULD NOT GET THIS CASE STATEMENT TO WORK.  ALWAYS GOES TO 'ELSE'
-    # case square
-    # when brd[line[0]] == PLAYER_MARKER && brd[line[1]] == PLAYER_MARKER && brd[line[2]] == INITIAL_MARKER
-    #  square = line[2]
-    #  break
-    # when brd[line[1]] == PLAYER_MARKER && brd[line[2]] == PLAYER_MARKER && brd[line[0]] == INITIAL_MARKER
-    #  square = line[0]
-    #  break
-    # when brd[line[0]] == PLAYER_MARKER && brd[line[2]] == PLAYER_MARKER && brd[line[1]] == INITIAL_MARKER
-    #  square = line[1]
-    #  break
-
-    else
-      square = find_computer_opportunities(line, brd)
-      break if square
+    square = find_at_risk_square(line, brd)
+    break if square
+  end
+  if square.nil?
+    WINNING_LINES.each do |line|
+    square = find_computer_opportunities(line, brd)
+    break if square.nil?
     end
-    if !square
-      square = empty_squares(brd).sample
-    end
+  end
+  if square.nil?
+    square = empty_squares(brd).sample
   end
   brd[square] = COMPUTER_MARKER
 end

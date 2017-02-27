@@ -1,4 +1,6 @@
 # Given solution implemented for find_at_risk_square
+require 'pry'
+
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
@@ -73,10 +75,18 @@ end
 
 def computer_places_piece!(brd)
   square = nil
-  WINNING_LINES.each do |line|
-    square = find_computer_opportunities(line, brd)
-    break if !square.nil?
+  if brd[5] == INITIAL_MARKER
+    square = brd[5]
+    brd[5] = COMPUTER_MARKER
   end
+
+  if square.nil?
+    WINNING_LINES.each do |line|
+      square = find_computer_opportunities(line, brd)
+      break if !square.nil?
+    end
+  end
+
   if square.nil?
     WINNING_LINES.each do |line|
       square = find_at_risk_square(line, brd)
