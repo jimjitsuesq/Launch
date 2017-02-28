@@ -1,6 +1,4 @@
 # Given solution implemented for find_at_risk_square
-require 'pry'
-
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'

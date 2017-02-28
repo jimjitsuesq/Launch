@@ -1,6 +1,3 @@
-# Given solution implemented for find_at_risk_square
-require 'pry'
-
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
@@ -101,6 +98,20 @@ def computer_places_piece!(brd)
   brd[square] = COMPUTER_MARKER
 end
 
+def place_piece!(board, player)
+  if player == 'm'
+    player_places_piece!(board)
+  else computer_places_piece!(board)
+  end
+end
+
+def alternate_player(player)
+  if player == 'c'
+    player = 'm'
+  else player = 'c'
+  end
+end
+
 def board_full?(brd)
   empty_squares(brd).empty?
 end
@@ -124,41 +135,27 @@ def detect_winner(brd)
   nil
 end
 
+current_player = ''
 choice = ''
 computer_count = 0
 player_count = 0
-
-def validate_choice(input)
-  if input != 'c' && input != 'm'
-    prompt "Sorry, that is not a valid choice.  Please choose either 'c', or 'm'!"
-  end
-end
 
 loop do
   loop do
     prompt "Who do you want to go first each game? Choose either [m]e (you) or [c]omputer:"
     choice = gets.chomp.downcase
     if choice != 'c' && choice != 'm'
-    prompt "Sorry, that is not a valid choice.  Please choose either 'c', or 'm'!"
+      prompt "Sorry, that is not a valid choice.  Please choose either 'c', or 'm'!"
     else break
     end
   end
   loop do
     board = initialize_board
-    display_board(board)
+    current_player = choice
     loop do
-      if choice == 'm'
-        player_places_piece!(board)
-      else computer_places_piece!(board)
-      end
       display_board(board)
-      break if someone_won?(board) || board_full?(board)
-
-      if choice == 'm'
-        computer_places_piece!(board)
-      else player_places_piece!(board)
-      end
-      display_board(board)
+      place_piece!(board, current_player)
+      current_player = alternate_player(current_player)
       break if someone_won?(board) || board_full?(board)
     end
     display_board(board)
